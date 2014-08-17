@@ -1,0 +1,9 @@
+#cloud-config
+
+coreos:
+  etcd:
+    name: db-core
+    # you'll need to replace the discovery url with a value returned by https://discovery.etcd.io/new
+    discovery: https://discovery.etcd.io/ae9f6dce082da261ad150bf0be0b2eb1
+    addr: $public_ipv4:4001
+    peer-addr: $private_ipv4:7001
