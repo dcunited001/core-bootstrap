@@ -1,0 +1,37 @@
+# contains the config for each node on the cluster
+
+ac.xel.io:
+  region: nyc3
+  size: 2gb
+  image: coreos-alpha
+  etcd:
+    name: ac
+  fleet: 
+    region: NYC3
+
+db.xel.io:
+  region: nyc3
+  size: 2gb
+  image: coreos-alpha
+  etcd:
+    name: db
+  fleet: 
+    region: NYC3
+
+do.xel.io:
+  region: nyc3
+  size: 2gb
+  image: coreos-alpha
+  etcd:
+    name: do
+  fleet: 
+    region: NYC3
+
+test.xel.io:
+  region: nyc3
+  size: 2gb
+  image: coreos-alpha
+  etcd:
+    name: test
+  fleet: 
+    region: NYC3

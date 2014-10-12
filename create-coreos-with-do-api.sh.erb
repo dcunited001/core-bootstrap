@@ -1,0 +1,40 @@
+curl -X POST "https://api.digitalocean.com/v2/droplets" \
+      -d'{"name":"<%= node_name %>",
+      "region":"<%= node.region || 'nyc3' %>",
+      "size":"<%= node.size || '2gb' %>",
+      "private_networking":true,
+      "backups":true,
+      "image":"<%= node.image || 'coreos-alpha' %>",
+      "user_data":
+"#cloud-config
+# https://discovery.etcd.io/new for discovery_token (one per cluster)
+
+coreos:
+  hostname: <%= node_name %>
+  etcd:
+    name: <%= node.etcd['name'] %>
+    discovery: <%= cluster.discovery %>
+    addr: $public_ipv4:4001
+    peer-addr: $private_ipv4:7001
+  fleet:
+    public-ip: $private_ipv4
+    metadata: region=<%= node.fleet['region'] %>
+  units:
+    - name: etcd.service
+      command: start
+    - name: fleet.service
+      command: start
+  <% if node.users && node.users.any? %>
+  users:
+  	<% node.users && node.users.each do |u| %>
+    - name: <%= u['name'] %>
+      groups: <%= 'sudo' if u['sudo'] %>
+      ssh-authorized-keys: 
+        - <%= u['ssh_pub'] %>
+    <% end %>
+  <% end %>",
+
+      "ssh_keys":[<%= cluster.ssh_ids.join(',') %>]}' \
+\
+      -H "Authorization: Bearer <%= cluster.token %>" \
+      -H "Content-Type: application/json"

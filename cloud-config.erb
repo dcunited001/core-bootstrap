@@ -1,0 +1,29 @@
+#cloud-config
+# https://discovery.etcd.io/new for discovery_token (one per cluster)
+
+coreos:
+  hostname: <%= hostname %>
+
+  etcd:
+    name: <%= name %>
+    discovery: https://discovery.etcd.io/<%= etcd.discovery_token %>
+    addr: $public_ipv4:4001
+    peer-addr: $private_ipv4:7001
+
+  fleet:
+    public-ip: $private_ipv4
+    metadata: region=<%= fleet.region %>
+
+  units:
+    - name: etcd.service
+      command: start
+    - name: fleet.service
+      command: start
+
+  <% if users.any? %>
+    users:
+      - name: <%= users.first.name %>
+        groups: <%= 'sudo' if users.first.sudo? %>
+        ssh-authorized-keys: 
+          - <%= users.first.ssh_authorized_keys.first %>
+  <% end %>

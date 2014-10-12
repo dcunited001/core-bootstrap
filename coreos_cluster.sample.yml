@@ -1,0 +1,5 @@
+# contains clusterwide config
+token: 123abcdcooooookie
+ssh_ids: 
+  - 54321
+discovery: https://discovery.etcd.io/c000000kiem44444n$str
